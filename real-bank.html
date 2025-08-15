@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Secure National Bank - Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Using same modern dashboard styling as honeypot but without tracking */
+    body {
+      background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .dashboard-header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 16px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    }
+    
+    .dashboard-header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    
+    .dashboard-header p {
+      margin: 10px 0 0 0;
+      opacity: 0.9;
+    }
+    
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+    
+    .dashboard-card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      border: 1px solid #e5e7eb;
+    }
+    
+    .dashboard-card h3 {
+      color: #1f2937;
+      margin: 0 0 15px 0;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .balance-amount {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #10b981;
+      margin: 10px 0;
+    }
+    
+    .activity-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .activity-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid #f3f4f6;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .activity-list li:last-child {
+      border-bottom: none;
+    }
+    
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+    
+    .activity-icon.transfer {
+      background: #fef3c7;
+      color: #d97706;
+    }
+    
+    .activity-icon.deposit {
+      background: #d1fae5;
+      color: #059669;
+    }
+    
+    .activity-icon.purchase {
+      background: #ddd6fe;
+      color: #7c3aed;
+    }
+    
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .action-btn {
+      background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+      color: white;
+      border: none;
+      padding: 15px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <h1><i class="fas fa-university"></i> Welcome Back, Valued Client</h1>
+      <p>Secure National Bank - Your trusted financial partner since 1985</p>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="dashboard-card">
+        <h3><i class="fas fa-wallet"></i> Account Balance</h3>
+        <div class="balance-amount">$12,847.50</div>
+        <p style="color: #6b7280; margin: 0;">Available Balance</p>
+        <p style="color: #10b981; margin: 5px 0 0 0; font-size: 0.9rem;">
+          <i class="fas fa-arrow-up"></i> +2.3% this month
+        </p>
+      </div>
+
+      <div class="dashboard-card">
+        <h3><i class="fas fa-chart-line"></i> Quick Stats</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+          <div>
+            <div style="font-size: 1.5rem; font-weight: 600; color: #3b82f6;">$2,340</div>
+            <div style="font-size: 0.9rem; color: #6b7280;">This Month</div>
+          </div>
+          <div>
+            <div style="font-size: 1.5rem; font-weight: 600; color: #10b981;">$890</div>
+            <div style="font-size: 0.9rem; color: #6b7280;">Saved</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-card">
+      <h3><i class="fas fa-history"></i> Recent Activity</h3>
+      <ul class="activity-list">
+        <li>
+          <div class="activity-icon transfer">
+            <i class="fas fa-exchange-alt"></i>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-weight: 600;">Transfer to John Smith</div>
+            <div style="font-size: 0.9rem; color: #6b7280;">Today, 2:30 PM</div>
+          </div>
+          <div style="font-weight: 600; color: #ef4444;">-$500.00</div>
+        </li>
+        <li>
+          <div class="activity-icon deposit">
+            <i class="fas fa-plus"></i>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-weight: 600;">Salary Deposit</div>
+            <div style="font-size: 0.9rem; color: #6b7280;">Yesterday, 9:00 AM</div>
+          </div>
+          <div style="font-weight: 600; color: #10b981;">+$3,200.00</div>
+        </li>
+        <li>
+          <div class="activity-icon purchase">
+            <i class="fas fa-shopping-cart"></i>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-weight: 600;">Amazon Purchase</div>
+            <div style="font-size: 0.9rem; color: #6b7280;">Jan 14, 4:15 PM</div>
+          </div>
+          <div style="font-weight: 600; color: #ef4444;">-$89.99</div>
+        </li>
+      </ul>
+      
+      <div class="quick-actions">
+        <button class="action-btn" onclick="handleAction('transfer')">
+          <i class="fas fa-paper-plane"></i> Transfer Money
+        </button>
+        <button class="action-btn" onclick="handleAction('deposit')">
+          <i class="fas fa-plus-circle"></i> Deposit Check
+        </button>
+        <button class="action-btn" onclick="handleAction('statements')">
+          <i class="fas fa-file-alt"></i> View Statements
+        </button>
+        <button class="action-btn" onclick="handleAction('support')">
+          <i class="fas fa-headset"></i> Contact Support
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function handleAction(actionType) {
+      const button = event.target;
+      button.disabled = true;
+      button.style.opacity = '0.7';
+      
+      // Simulate real banking operations
+      setTimeout(() => {
+        button.disabled = false;
+        button.style.opacity = '1';
+        
+        switch(actionType) {
+          case 'transfer':
+            alert('Transfer feature: Please visit our branch or use our mobile app for transfers.');
+            break;
+          case 'deposit':
+            alert('Deposit feature: Mobile check deposit is available through our mobile app.');
+            break;
+          case 'statements':
+            alert('Statements: Your monthly statements are available in the Documents section.');
+            break;
+          case 'support':
+            alert('Support: Please call 1-800-BANK-HELP for immediate assistance.');
+            break;
+          default:
+            alert('Feature coming soon. Thank you for your patience.');
+        }
+      }, 1000);
+    }
+
+    // Add some realistic interactions
+    document.addEventListener('DOMContentLoaded', function() {
+      // Update last login time
+      const now = new Date();
+      const timeString = now.toLocaleTimeString();
+      
+      // Add some dynamic elements for realism
+      console.log('Secure National Bank - Dashboard loaded successfully');
+      console.log('Session started at:', timeString);
+    });
+  </script>
+</body>
+</html>

