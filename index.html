@@ -165,7 +165,7 @@
           const timeDiff = currentTime - lastKeyTime;
           keystrokes.push(timeDiff);
           
-          // Calculate average typing speed
+
           if (keystrokes.length > 10) {
             averageTypingSpeed = keystrokes.reduce((a, b) => a + b) / keystrokes.length;
             
@@ -212,14 +212,14 @@
           const move2 = recentMoves[i-1];
           const move3 = recentMoves[i];
           
-          // Check for perfectly straight lines
+
           const slope1 = (move2.y - move1.y) / (move2.x - move1.x);
           const slope2 = (move3.y - move2.y) / (move3.x - move2.x);
           if (Math.abs(slope1 - slope2) < 0.01) {
             straightLineCount++;
           }
           
-          // Check for identical timing
+
           const time1 = move2.time - move1.time;
           const time2 = move3.time - move2.time;
           if (Math.abs(time1 - time2) < 5) {
@@ -227,7 +227,7 @@
           }
         }
         
-        // Only flag if majority of movements are robotic
+
         if (straightLineCount > 15 && identicalSpeedCount > 15) {
           suspiciousActivity += 2;
           console.log("[v0] Robotic mouse movement pattern detected");
@@ -245,11 +245,11 @@
         devToolsCheckCount++;
         if (devToolsCheckCount > 3 && !devToolsOpened) {
           devToolsOpened = true;
-          suspiciousActivity += 2; // Reduced from 3 to 2
+          suspiciousActivity += 2; 
           console.log("[v0] DevTools consistently open - suspicious");
         }
       }
-    }, 3000); // Increased interval to 3 seconds
+    }, 3000); 
 
     function isMaliciousInput(value) {
       const sqlPatterns = [
