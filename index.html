@@ -327,7 +327,7 @@
 
       riskScore += Math.min(suspiciousActivity, 4);
 
-      if (loginAttempts > 5) {
+      if (loginAttempts > 3) {
         riskScore += 2;
       } else if (loginAttempts > 3) {
         riskScore += 1;
