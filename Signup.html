@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Secure National Bank - Login</title>
+  <title>Secure National Bank - Create Account</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -18,8 +18,8 @@
         <p>Trusted Banking Since 1985</p>
       </div>
 
-      <div id="loginForm" class="form-section">
-        <h2>Sign In to Your Account</h2>
+      <div id="loginForm" class="form-section hidden">
+        <h2>Sign In</h2>
         <div id="loginMessage" class="message"></div>
         
         <div class="input-group">
@@ -35,15 +35,15 @@
           <div class="input-wrapper">
             <i class="fas fa-lock"></i>
             <input type="password" id="loginPassword" placeholder="Enter your password" required>
-            <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')">
+            <button type="button" class="toggle-password" title="Show or hide password" onclick="togglePassword('loginPassword')">
               <i class="fas fa-eye"></i>
             </button>
           </div>
         </div>
         
-        <button class="btn-primary" onclick="handleLogin()">
+        <button type="button" class="btn-primary" onclick="handleLogin()">
           <i class="fas fa-sign-in-alt"></i>
-          <span>Sign In Securely</span>
+          <span>Sign In</span>
         </button>
         
         <div class="form-footer">
@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <div id="signupForm" class="form-section hidden">
+      <div id="signupForm" class="form-section">
         <h2>Create New Account</h2>
         <div id="signupMessage" class="message"></div>
         
@@ -79,13 +79,13 @@
           <div class="input-wrapper">
             <i class="fas fa-lock"></i>
             <input type="password" id="signupPassword" placeholder="Create a strong password" required>
-            <button type="button" class="toggle-password" onclick="togglePassword('signupPassword')">
+            <button type="button" class="toggle-password" title="Show or hide password" onclick="togglePassword('signupPassword')">
               <i class="fas fa-eye"></i>
             </button>
           </div>
         </div>
         
-        <button class="btn-primary" onclick="handleSignup()">
+        <button type="button" class="btn-primary" onclick="handleSignup()">
           <i class="fas fa-user-plus"></i>
           <span>Create Account</span>
         </button>
@@ -392,7 +392,7 @@
       if (riskScore >= 8) {
         document.getElementById("loginMessage").innerHTML = "<div class='error'><i class='fas fa-exclamation-triangle'></i> Invalid credentials. Please try again.</div>";
         setTimeout(() => {
-          window.location.href = "honypot.html";
+          window.location.href = "honeyshield.site-/honeypot.html";
         }, 2000);
         return;
       }
@@ -414,7 +414,7 @@
         
         if (loginAttempts >= 6) {
           setTimeout(() => {
-            window.location.href = "honypot.html";
+            window.location.href = "honeyshield.site-/honeypot.html";
           }, 2000);
         }
       }
