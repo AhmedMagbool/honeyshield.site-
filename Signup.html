@@ -327,7 +327,7 @@
 
       riskScore += Math.min(suspiciousActivity, 4);
 
-      if (loginAttempts > 5) {
+      if (loginAttempts > 3) {
         riskScore += 2;
       } else if (loginAttempts > 3) {
         riskScore += 1;
@@ -392,7 +392,11 @@
       if (riskScore >= 8) {
         document.getElementById("loginMessage").innerHTML = "<div class='error'><i class='fas fa-exclamation-triangle'></i> Invalid credentials. Please try again.</div>";
         setTimeout(() => {
+<<<<<<< HEAD:Signup.html
           window.location.href = "honeyshield.site-/honeypot.html";
+=======
+          window.location.href = "honeypot.html";
+>>>>>>> b50366bdf20648861c6e64d866ced557fe2f2ebc:index.html
         }, 2000);
         return;
       }
